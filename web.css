@@ -1,0 +1,51 @@
+/* 1. تنسيق الخلفية العامة للموقع ونوع الخط */
+.stApp {
+    background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+    color: #f8fafc;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* 2. تنسيق العناوين الكبيرة (العنوان الرئيسي) */
+h1 {
+    color: #580101 !important;
+    text-align: center;
+    font-weight: 800 !important;
+    text-shadow: 0px 0px 15px rgba(56, 189, 248, 0.4);
+    margin-bottom: 30px !important;
+}
+
+/* 3. تنسيق العناوين الفرعية */
+h2, h3 {
+    color: #a855f7 !important;
+    font-weight: 600 !important;
+}
+
+/* 4. تنسيق أزرار الـ Streamlit الافتراضية لتصبح جذابة */
+.stButton>button {
+    background: linear-gradient(90deg, #f83838 0%, #000000 100%) !important;
+    color: white !important;
+    border: none !important;
+    padding: 10px 24px !important;
+    font-weight: bold !important;
+    border-radius: 12px !important;
+    box-shadow: 0 4px 15px rgba(168, 85, 247, 0.4) !important;
+    transition: all 0.3s ease-in-out !important;
+    width: 100%;
+}
+
+/* حركة تفاعلية عند تمرير الماوس فوق الزرار */
+.stButton>button:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 20px rgba(56, 189, 248, 0.6) !important;
+}
+
+/* 5. كلاس مخصص (لو حابب تعمل صندوق أو كارت مميز في البايثون) */
+.custom-card {
+    background-color: rgba(30, 41, 59, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    padding: 20px;
+    margin-top: 15px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(8px);
+}
