@@ -24,7 +24,7 @@ if "logged_in" not in st.session_state:
 
 # إذا لم يسجل الدخول بعد
 if not st.session_state.logged_in:
-    st.title("🔐 Welcome to Nabil Website")
+    st.title("💎 Welcome to Nabil Website💎")
     
     # عمل تبويبين (واحد للدخول وواحد لعمل حساب جديد)
     tab1, tab2 = st.tabs(["🔑 Sign In (تسجيل الدخول)", "📝 Sign Up (إنشاء حساب جديد)"])
