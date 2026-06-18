@@ -3,7 +3,7 @@ import pandas as pd
 from datetime import datetime
 
 # 1. إعدادات الصفحة
-st.set_page_config(page_title="Nabil Shop", page_icon="💎", layout="centered")
+st.set_page_config(page_title="Nabil Website", page_icon="💎", layout="centered")
 
 # 2. استدعاء ملف الـ CSS لتطبيق التنسيقات
 try:
