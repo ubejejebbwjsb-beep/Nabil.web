@@ -1,45 +1,96 @@
 import streamlit as st
-
-# 1. السطرين بتوع الـ CSS (دول يفضلوا في الأول خالص دايماً)
-with open("web.css", "r", encoding="utf-8") as f:
-    st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
-
-
-# 2. هنا بقى حط كل الأكواد القديمة بتاعتك اللي كانت في الملف
-# (زي الأزرار، النصوص، القوائم، أو أي حاجة كنت كاتبها قبل كدة)
-
-#st.title("موقع نبيل المطور 🚀")
-#st.write("هنا بقية الأكواد القديمة بتاعتك هتشتغل عادي جداً...")
-
-# حط أكوادك هنا بالترتيب تحت بعضها 👇
-import streamlit as st
-
-import streamlit as st
 import pandas as pd
 from datetime import datetime
 
-# ============== إعدادات عامة ==============
+# 1. إعدادات الصفحة
 st.set_page_config(page_title="Nabil Shop", page_icon="💎", layout="centered")
 
-# قاموس الأسعار والصور (سهل التعديل والإضافة)
+# 2. استدعاء ملف الـ CSS لتطبيق التنسيقات
+try:
+    with open("web.css", "r", encoding="utf-8") as f:
+        st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
+except FileNotFoundError:
+    pass
+
+# ================== نظام تسجيل الحساب والدخول الديناميكي ==================
+
+# إنشاء قاعدة بيانات وهمية في الجلسة لحفظ الحسابات الجديدة
+if "user_credentials" not in st.session_state:
+    st.session_state.user_credentials = {}  # هتحفظ اسم المستخدم وكلمة المرور
+
+# حالة تسجيل الدخول الحالية
+if "logged_in" not in st.session_state:
+    st.session_state.logged_in = False
+
+# إذا لم يسجل الدخول بعد
+if not st.session_state.logged_in:
+    st.title("🔐 Welcome to Nabil Shop")
+    
+    # عمل تبويبين (واحد للدخول وواحد لعمل حساب جديد)
+    tab1, tab2 = st.tabs(["🔑 Sign In (تسجيل الدخول)", "📝 Sign Up (إنشاء حساب جديد)"])
+    
+    # --- التبويب الأول: تسجيل الدخول ---
+    with tab1:
+        st.subheader("سجل دخولك للمتجر")
+        login_user = st.text_input("Username:", key="login_user", placeholder="Enter your username")
+        login_pass = st.text_input("Password:", type="password", key="login_pass", placeholder="Enter your password")
+        
+        if st.button("Login 🚀"):
+            # التحقق هل الاسم والباسورد موجودين في الحسابات اللي سجلت؟
+            if login_user in st.session_state.user_credentials and st.session_state.user_credentials[login_user] == login_pass:
+                st.session_state.logged_in = True
+                st.success(f"🎉 أهلاً بك يا {login_user}! تم الدخول بنجاح.")
+                st.rerun()
+            else:
+                st.error("❌ اسم المستخدم أو كلمة المرور غير صحيحة، أو الحساب غير موجود!")
+
+    # --- التبويب الثاني: إنشاء حساب جديد ---
+    with tab2:
+        st.subheader("إنشاء حساب جديد بأي بيانات تختارها")
+        new_user = st.text_input("Choose Username:", key="new_user", placeholder="اكتب أي اسم مستخدم تحبه")
+        new_pass = st.text_input("Choose Password:", type="password", key="new_pass", placeholder="اكتب الباسورد اللي يعجبك")
+        
+        if st.button("Create Account ✨"):
+            if not new_user.strip() or not new_pass.strip():
+                st.warning("⚠️ من فضلك املأ الفراغات أولاً!")
+            elif new_user in st.session_state.user_credentials:
+                st.error("❌ اسم المستخدم ده محجوز قبل كده، اختر اسم تاني.")
+            else:
+                # حفظ الحساب الجديد في الجلسة
+                st.session_state.user_credentials[new_user] = new_pass
+                st.success("✅ تم إنشاء الحساب بنجاح! تقدر دلوقتي تروح لتبويب Sign In وتسجل دخول.")
+
+    # إيقاف الكود هنا حتى يتم الدخول
+    st.stop()
+
+
+# ================== كود المتجر الرئيسي (يظهر بعد الـ Sign In) ==================
+
+# زر تسجيل الخروج
+col_title, col_logout = st.columns([4, 1])
+with col_logout:
+    if st.button("Sign Out 🚪"):
+        st.session_state.logged_in = False
+        st.rerun()
+
+# قاموس الأسعار والصور
 PRODUCTS = {
     "chips": {"price": 10, "emoji": "🥔"},
     "pepsi": {"price": 15, "emoji": "🥤"},
     "big chips": {"price": 20, "emoji": "🍟"},
 }
 
-# إنشاء "سجل فواتير" داخل الجلسة (يحفظ طول مدة استخدام التطبيق)
 if "invoices" not in st.session_state:
     st.session_state.invoices = []
 
 # ============== عنوان الموقع ==============
-st.title("Welcome to the Nabil Website 💎")
+with col_title:
+    st.title("Welcome to the Nabil Website 💎")
 st.write("اختار منتجاتك وحدد الكمية، وشوف فاتورتك فوراً 🧾")
 st.write("---")
 
 # ============== اسم العميل ==============
 name = st.text_input("👤 Enter your name:")
-
 st.write("---")
 
 # ============== اختيار المنتجات بالأعمدة ==============
@@ -63,9 +114,8 @@ st.write("---")
 
 # ============== حساب الإجمالي والخصم ==============
 subtotal = (price1 * qty1) + (price2 * qty2)
-
-DISCOUNT_THRESHOLD = 30   # الحد الأدنى للخصم
-DISCOUNT_RATE = 0.10      # نسبة الخصم 10%
+DISCOUNT_THRESHOLD = 30   
+DISCOUNT_RATE = 0.10      
 
 discount = 0
 if subtotal > DISCOUNT_THRESHOLD:
@@ -73,7 +123,6 @@ if subtotal > DISCOUNT_THRESHOLD:
 
 total_price = subtotal - discount
 
-# عرض ملخص سريع قبل الشراء
 st.write(f"**الإجمالي قبل الخصم:** {subtotal} LE")
 if discount > 0:
     st.success(f"🎉 مبروك! حصلت على خصم {int(DISCOUNT_RATE*100)}% = {discount:.2f} LE")
@@ -129,7 +178,7 @@ Total: {total_price:.2f} LE
             mime="text/plain",
         )
 
-# ============== سجل كل الفواتير (Session) ==============
+# ============== سجل كل الفواتير ==============
 if st.session_state.invoices:
     st.write("---")
     st.write("### 🧾 سجل الفواتير (الجلسة الحالية)")
@@ -140,6 +189,9 @@ if st.session_state.invoices:
     st.download_button(
         label="⬇️ تحميل كل الفواتير (CSV)",
         data=csv,
+        file_name="all_invoices.csv",
+        mime="text/csv",
+    )
         file_name="all_invoices.csv",
         mime="text/csv",
     )
