@@ -192,6 +192,3 @@ if st.session_state.invoices:
         file_name="all_invoices.csv",
         mime="text/csv",
     )
-        file_name="all_invoices.csv",
-        mime="text/csv",
-    )
